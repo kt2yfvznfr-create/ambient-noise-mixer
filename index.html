@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ambient Noise Mixer</title>
+  <meta name="description" content="Mix ambient sounds for sleep, focus, and relaxation. Create your perfect background sound mix with simple sliders." />
+
+  <meta property="og:title" content="Ambient Noise Mixer" />
+  <meta property="og:description" content="Mix ambient sounds for sleep, focus, and relaxation. Simple sliders. Calm design." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://kt2yfvnzfr-create.github.io/ambient-noise-mixer/og.jpg" />
+
+  <link rel="icon" href="icon.png" />
+
+  <style>
+    :root{
+      --bg0:#0a0712;
+      --bg1:#120a1f;
+      --card:rgba(255,255,255,.06);
+      --stroke:rgba(255,255,255,.12);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.72);
+      --muted2:rgba(255,255,255,.58);
+      --pink:#ff7bd1;
+      --milk:#fff4f8;
+      --violet:#9a7bff;
+      --blue:#7bd8ff;
+      --shadow:0 20px 80px rgba(0,0,0,.55);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1000px 700px at 20% -10%, rgba(255,123,209,.22), transparent 60%),
+        radial-gradient(900px 700px at 80% 10%, rgba(154,123,255,.18), transparent 60%),
+        radial-gradient(900px 700px at 60% 110%, rgba(123,216,255,.12), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+
+    a{color:rgba(255,255,255,.92);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .wrap{max-width:1100px;margin:0 auto;padding:44px 18px 70px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:14px;margin-bottom:26px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;
+    }
+    .logo{
+      width:42px;height:42px;border-radius:12px;
+      background:
+        radial-gradient(18px 18px at 35% 30%, rgba(255,255,255,.70), transparent 55%),
+        linear-gradient(135deg, rgba(255,123,209,.95), rgba(255,244,248,.92), rgba(154,123,255,.92));
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.22);
+      display:grid;place-items:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .logo:after{
+      content:"";
+      position:absolute;inset:-30%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+      transform:rotate(20deg);
+      animation:shine 4.5s linear infinite;
+      opacity:.7;
+    }
+    @keyframes shine{
+      0%{transform:translateX(-40%) rotate(20deg)}
+      100%{transform:translateX(40%) rotate(20deg)}
+    }
+    .brand h1{margin:0;font-size:18px;letter-spacing:.2px}
+    .brand p{margin:0;font-size:13px;color:var(--muted2)}
+
+    .pillRow{display:flex;flex-wrap:wrap;gap:10px}
+    .pill{
+      padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      color:rgba(255,255,255,.86);
+      font-size:13px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:22px;
+      align-items:center;
+      margin-top:10px;
+    }
+
+    .headline{
+      margin:0 0 10px;
+      font-size:44px;
+      letter-spacing:.2px;
+      line-height:1.05;
+    }
+    .sub{
+      margin:0 0 14px;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.6;
+      max-width:58ch;
+    }
+
+    .ctaRow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:11px 14px;border-radius:14px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      color:rgba(255,255,255,.92);
+      font-weight:600;font-size:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+      user-select:none;
+    }
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22)}
+    .btnPrimary{
+      background:
+        radial-gradient(16px 16px at 25% 25%, rgba(255,255,255,.55), transparent 60%),
+        linear-gradient(135deg, rgba(255,123,209,.92), rgba(255,244,248,.86), rgba(154,123,255,.92));
+      color:#1a0f20;
+      border-color:rgba(255,255,255,.22);
+    }
+    .btnPrimary:hover{transform:translateY(-1px);filter:saturate(1.06)}
+
+    .divider{height:1px;background:rgba(255,255,255,.10);margin:22px 0}
+
+    .sectionTitle{margin:0 0 10px;font-size:18px;letter-spacing:.2px}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:12px;
+    }
+    .mini{
+      padding:14px;border-radius:16px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      min-height:96px;
+    }
+    .mini h3{margin:0 0 8px;font-size:14px}
+    .mini p{margin:0;color:var(--muted2);font-size:13px;line-height:1.45}
+
+    /* iPhone-like mockup */
+    .phoneWrap{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:10px 0;
+    }
+    .phone{
+      width:340px;
+      aspect-ratio: 9 / 19.5;
+      border-radius:42px;
+      background:
+        radial-gradient(260px 220px at 30% 10%, rgba(255,123,209,.18), transparent 60%),
+        radial-gradient(220px 220px at 80% 30%, rgba(154,123,255,.18), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: 0 26px 110px rgba(0,0,0,.65);
+      position:relative;
+      overflow:hidden;
+      transform: translateZ(0);
+    }
+    .phone:before{
+      content:"";
+      position:absolute;inset:0;
+      background:
+        radial-gradient(800px 420px at 10% -10%, rgba(255,255,255,.18), transparent 55%),
+        radial-gradient(700px 420px at 90% 30%, rgba(255,255,255,.12), transparent 55%);
+      pointer-events:none;
+    }
+    .island{
+      position:absolute;top:16px;left:50%;
+      transform:translateX(-50%);
+      width:130px;height:26px;border-radius:999px;
+      background:rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.10);
+      filter: blur(.0px);
+    }
+    .screen{
+      position:absolute;inset:14px;
+      border-radius:34px;
+      background:
+        radial-gradient(420px 300px at 20% 0%, rgba(255,123,209,.14), transparent 60%),
+        radial-gradient(420px 340px at 90% 40%, rgba(154,123,255,.14), transparent 60%),
+        linear-gradient(180deg, rgba(10,7,18,.92), rgba(18,10,31,.92));
+      border:1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .screenInner{
+      height:100%;
+      padding:46px 18px 18px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .screenHeader{
+      display:flex;align-items:center;justify-content:space-between;
+      color:rgba(255,255,255,.84);
+      font-size:12px;
+      opacity:.9;
+    }
+    .titleInPhone{
+      text-align:center;
+      margin:6px 0 0;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .iconBadge{
+      margin:8px auto 4px;
+      width:96px;height:96px;border-radius:26px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);
+      display:grid;place-items:center;
+      box-shadow:0 16px 60px rgba(0,0,0,.45);
+    }
+    .iconBadge img{
+      width:86px;height:86px;border-radius:22px;
+      display:block;
+    }
+    .phoneDesc{
+      text-align:center;
+      color:rgba(255,255,255,.70);
+      font-size:12px;
+      line-height:1.45;
+      margin:0 10px;
+    }
+    .slider{
+      margin-top:6px;
+      padding:12px 12px;
+      border-radius:16px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .sliderTop{
+      display:flex;align-items:center;justify-content:space-between;
+      font-size:12px;color:rgba(255,255,255,.84);
+      margin-bottom:8px;
+    }
+    .bar{
+      height:10px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      overflow:hidden;
+      position:relative;
+    }
+    .fill{
+      height:100%;
+      width:62%;
+      background:linear-gradient(90deg, rgba(255,123,209,.85), rgba(255,244,248,.75), rgba(154,123,255,.85));
+      border-radius:999px;
+      filter:saturate(1.05);
+    }
+    .thumb{
+      position:absolute;top:50%;
+      left:62%;
+      transform:translate(-50%,-50%);
+      width:18px;height:18px;border-radius:999px;
+      background:rgba(255,255,255,.92);
+      box-shadow:0 6px 18px rgba(0,0,0,.35);
+    }
+
+    /* scroll effects */
+    .fadeUp{
+      opacity:0;
+      transform:translateY(14px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fadeUp.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .footer{
+      margin-top:18px;
+      color:rgba(255,255,255,.62);
+      font-size:12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .footer a{color:rgba(255,255,255,.78)}
+    .hr{height:1px;background:rgba(255,255,255,.10);margin:18px 0}
+
+    @media (max-width:920px){
+      .hero{grid-template-columns:1fr}
+      .headline{font-size:38px}
+      .phone{width:320px}
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Ambient Noise Mixer</h1>
+          <p>Sleep Focus Relaxation</p>
+        </div>
+      </div>
+      <div class="pillRow">
+        <span class="pill">Background playback</span>
+        <span class="pill">Sleep timer</span>
+        <span class="pill">Haptics</span>
+      </div>
+    </div>
+
+    <div class="card fadeUp">
+      <div class="hero">
+        <div>
+          <h2 class="headline">Mix sounds for sleep</h2>
+          <p class="sub">
+            Create your perfect ambient sound mix for focus, relaxation, or sleep.
+            Blend multiple sounds with simple sliders and keep the mix playing in the background.
+          </p>
+
+          <div class="ctaRow">
+            <a class="btn btnPrimary" href="#privacy">Privacy Policy</a>
+            <a class_toggle class="btn" href="mailto:RashadAliyev1992@proton.me">Contact support</a>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="pillRow">
+            <span class="pill">Master volume</span>
+            <span class="pill">Individual sliders</span>
+            <span class="pill">Auto play</span>
+            <span class="pill">Sleep duration</span>
+            <span class="pill">Reset options</span>
+          </div>
+        </div>
+
+        <div class="phoneWrap">
+          <div class="phone" aria-label="Phone mockup">
+            <div class="island" aria-hidden="true"></div>
+            <div class="screen">
+              <div class="screenInner">
+                <div class="screenHeader">
+                  <span>17:45</span>
+                  <span>98%</span>
+                </div>
+
+                <div class="titleInPhone">WhiteNoiseMix</div>
+
+                <div class="iconBadge">
+                  <img src="icon.png" alt="App icon">
+                </div>
+
+                <p class="phoneDesc">
+                  Blend Rain Fireplace Coffee Shop Ocean Waves Wind and more.
+                  Keep it calm. Keep it steady.
+                </p>
+
+                <div class="slider">
+                  <div class="sliderTop">
+                    <span>Master Volume</span>
+                    <span>39%</span>
+                  </div>
+                  <div class="bar">
+                    <div class="fill"></div>
+                    <div class="thumb"></div>
+                  </div>
+                </div>
+
+                <div class="slider">
+                  <div class="sliderTop">
+                    <span>Rain</span>
+                    <span>46%</span>
+                  </div>
+                  <div class="bar">
+                    <div class="fill" style="width:46%"></div>
+                    <div class="thumb" style="left:46%"></div>
+                  </div>
+                </div>
+
+                <div class="slider">
+                  <div class="sliderTop">
+                    <span>Ocean Waves</span>
+                    <span>26%</span>
+                  </div>
+                  <div class="bar">
+                    <div class="fill" style="width:26%"></div>
+                    <div class="thumb" style="left:26%"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="divider"></div>
+
+      <h2 class="sectionTitle fadeUp">What it does</h2>
+      <div class="grid fadeUp">
+        <div class="mini">
+          <h3>Build a mix in seconds</h3>
+          <p>Choose sounds and adjust sliders until the blend feels right.</p>
+        </div>
+        <div class="mini">
+          <h3>Sleep timer</h3>
+          <p>Set a duration and let the app stop playback automatically.</p>
+        </div>
+        <div class="mini">
+          <h3>Stay in the background</h3>
+          <p>Keep listening while you read, work, or lock your screen.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2 class="sectionTitle fadeUp">Controls</h2>
+      <div class="grid fadeUp">
+        <div class="mini">
+          <h3>Auto Play</h3>
+          <p>Start playback automatically when you open the app.</p>
+        </div>
+        <div class="mini">
+          <h3>Haptic feedback</h3>
+          <p>Subtle vibration on interactions for a tactile feel.</p>
+        </div>
+        <div class="mini">
+          <h3>Reset</h3>
+          <p>Reset the mix or restore default settings anytime.</p>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <h2 class="sectionTitle fadeUp">Support</h2>
+      <p class="fadeUp" style="margin:0;color:rgba(255,255,255,.78)">
+        Email: <a href="mailto:RashadAliyev1992@proton.me">RashadAliyev1992@proton.me</a>
+      </p>
+
+      <div class="divider"></div>
+
+      <h2 id="privacy" class="sectionTitle fadeUp">Privacy Policy</h2>
+      <p class="fadeUp" style="margin:0;color:rgba(255,255,255,.78)">
+        Read here:
+        <a href="https://www.freeprivacypolicy.com/live/f3ddc593-2d0f-4994-8ffa-19602d21eccc" target="_blank" rel="noopener noreferrer">
+          https://www.freeprivacypolicy.com/live/f3ddc593-2d0f-4994-8ffa-19602d21eccc
+        </a>
+      </p>
+
+      <div class="footer">
+        <span>© <span id="y"></span> Ambient Noise Mixer</span>
+        <span class="small">Calm utility landing page for App Store review</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    const els = document.querySelectorAll(".fadeUp");
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting) e.target.classList.add("show");
+      });
+    }, {threshold: 0.12});
+    els.forEach(el=>io.observe(el));
+  </script>
+</body>
+</html>
